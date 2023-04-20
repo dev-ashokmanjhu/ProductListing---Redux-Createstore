@@ -2,15 +2,15 @@ import HeaderCartButton from "./HeaderCartButton";
 import classes from "./Header.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../store/authSlice";
 import { msg } from "../Utils/alert";
+import { logout_user } from "../redux/actions/authActions";
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
   const logOutHandler = () => {
-    dispatch(authActions.logOut());
+    dispatch(logout_user());
     localStorage.removeItem("token");
     msg("Logout Successfully");
     navigate("/login");

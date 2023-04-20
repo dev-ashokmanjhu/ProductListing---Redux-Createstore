@@ -1,10 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
-const defaultState = { items: [], totalAmount: 0, cartIsValid: true };
-const cartSlice = createSlice({
-  name: "cart",
-  initialState: defaultState,
-  reducers: {
-    addItemToCart(state, action) {
+const initialState = {
+  items: [],
+  totalAmount: 0,
+  cartIsValid: true,
+};
+
+export const cartReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "ADD_TO_CART": {
       const newItem = action.payload;
       const numberOfitems = state.items.reduce((curNumber, item) => {
         return curNumber + item.quantity;
@@ -48,8 +50,9 @@ const cartSlice = createSlice({
         totalAmount: updatedTotalAmount,
         cartIsValid: true,
       };
-    },
-    updateCartItem(state, action) {
+    }
+
+    case "UPDATE_CART_ITEM": {
       const newItem = action.payload;
       const numberOfCartItems = state.items.reduce((curNumber, item) => {
         return curNumber + item.quantity;
@@ -103,19 +106,24 @@ const cartSlice = createSlice({
         totalAmount: updatedTotalAmount,
         cartIsValid: true,
       };
-    },
-    removeCartItem(state, action) {
+    }
+    case "REMOVE_CART_ITEM": {
       const id = action.payload;
       const existingCartItemIndex = state.items.findIndex(
         (item) => item.id === id
       );
       const existingItem = state.items[existingCartItemIndex];
       // updating the total amount however it exist or not in cart
-      state.totalAmount =
+      const totAmount =
         state.totalAmount - existingItem.price * existingItem.quantity;
-      state.items = state.items.filter((item) => item.id !== id);
-    },
-    removeFromCart(state, action) {
+      const updatedItems = state.items.filter((item) => item.id !== id);
+      return {
+        items: updatedItems,
+        totalAmount: totAmount,
+        cartIsValid: true,
+      };
+    }
+    case "REMOVE_ONE_CART_ITEM": {
       const id = action.payload;
       // checking item already exist or not in the cart behalf of it add item in cart
       const existingCartItemIndex = state.items.findIndex(
@@ -144,13 +152,15 @@ const cartSlice = createSlice({
         totalAmount: updatedTotalAmount,
         cartIsValid: true,
       };
-    },
-    cartReset(state) {
-      state.items = [];
-      state.totalAmount = 0;
-    },
-  },
-});
-
-export const cartActions = cartSlice.actions;
-export default cartSlice;
+    }
+    case "CART_RESET": {
+      return {
+        items: [],
+        totalAmount: 0,
+        cartIsValid: true,
+      };
+    }
+    default:
+      return state;
+  }
+};

@@ -1,8 +1,8 @@
 import ProductForm from "./ProductForm";
 import classes from "./Product.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { cartActions } from "../../store/cartSlice";
 import { msg } from "../../Utils/alert";
+import { updateItemInCart } from "../../redux/actions/cartActions";
 
 const Product = (props) => {
   const dispatch = useDispatch();
@@ -20,15 +20,17 @@ const Product = (props) => {
   const product = cartRedux.items[productIndex];
   // it get item quantity from function props and send data of props product to redux store
   const addToCartHandler = (quantity) => {
-    dispatch(
-      cartActions.updateCartItem({
+    dispatch({
+      type: "UPDATE_CART_ITEM",
+      payload: {
         id: props.id,
         name: props.name,
         quantity: quantity,
         price: props.price,
         image: props.img,
-      })
-    );
+      },
+    });
+
     if (!(numberOfCartItems + quantity > 20)) {
       msg(`Add ${quantity} Item to Cart`);
     } else {

@@ -3,10 +3,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { authActions } from "../store/authSlice";
+// import { authActions } from "../store/authSlice";
 import axios from "axios";
 import { msg } from "../Utils/alert";
 import SecondarySpiner from "../Utils/SecondarySpiner";
+import { login_user } from "../redux/actions/authActions";
 
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +53,7 @@ const Register = () => {
         .post("https://e-commerce-backend-two-neon.vercel.app/register", data)
         .then((res) => {
           console.log(res);
-          dispatch(authActions.logIn());
+          dispatch(login_user());
           localStorage.setItem("token", res.data.token);
           msg("Register Successfully");
           actios.resetForm();

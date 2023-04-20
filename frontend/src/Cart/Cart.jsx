@@ -1,11 +1,16 @@
 import CartItem from "./CartItem";
 import classes from "./Cart.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { cartActions } from "../store/cartSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { msg } from "../Utils/alert";
 import { useState } from "react";
 import SecondarySpiner from "../Utils/SecondarySpiner";
+import {
+  addToCart,
+  removeOneToCart,
+  removeToCart,
+  resetCart,
+} from "../redux/actions/cartActions";
 
 const Cart = (props) => {
   const dispatch = useDispatch();
@@ -23,19 +28,22 @@ const Cart = (props) => {
   const hasItems = cartRedux.items.length > 0;
   // function for removing item which get id as argument and redirect to cotext action
   const cartItemRemoveHandler = (id) => {
-    dispatch(cartActions.removeFromCart(id));
+    dispatch(removeOneToCart(id));
   };
   const removeCartItemHandler = (id) => {
+    dispatch(removeToCart(id));
     msg("Removed item From Cart");
-    dispatch(cartActions.removeCartItem(id));
   };
   // function for adding Item which get item as argument and redirect to addItem context action and only increase 1 quantity
   const cartItemAddHandler = (item) => {
-    dispatch(cartActions.addItemToCart({ ...item, quantity: 1 }));
+    dispatch({
+      type: "ADD_TO_CART",
+      payload: { ...item, quantity: 1 },
+    });
   };
   // function for reset Item which set state to defaultstate
   const resetItemsHandler = () => {
-    dispatch(cartActions.cartReset());
+    dispatch(resetCart());
     msg("Reset Cart Successfully");
   };
   const orderHandler = async () => {

@@ -17,7 +17,7 @@ const SecondarySpiner = () => {
         height="10"
       />
       <rect
-        class="spinner_9y7u spinner_DF2s"
+        className="spinner_9y7u spinner_DF2s"
         x="1"
         y="1"
         rx="1"
@@ -25,7 +25,7 @@ const SecondarySpiner = () => {
         height="10"
       />
       <rect
-        class="spinner_9y7u spinner_q27e"
+        className="spinner_9y7u spinner_q27e"
         x="1"
         y="1"
         rx="1"

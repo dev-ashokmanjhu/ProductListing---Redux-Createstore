@@ -4,23 +4,23 @@ import App from "./App";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import Cart from "./Cart/Cart";
 import { Provider, useDispatch } from "react-redux";
-import store from "./store/store";
 import Header from "./Layout/Header";
 import Login from "./AuthPages/login";
 import Register from "./AuthPages/Register";
 import { useEffect } from "react";
-import { authActions } from "./store/authSlice";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PaymentSuccess from "./UI/PaymentSuccess";
 import PaymentFail from "./UI/PaymentFail";
+import { login_user } from "./redux/actions/authActions";
+import store from "./redux/store";
 
 const Root = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      dispatch(authActions.logIn());
+      dispatch(login_user());
     }
   });
   return (
