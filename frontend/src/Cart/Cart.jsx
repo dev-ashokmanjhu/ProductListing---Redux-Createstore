@@ -16,16 +16,26 @@ const Cart = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isCheckout, setIsCheckout] = useState(false);
+
   const cartRedux = useSelector((state) => state.cart);
   const { isAuthenticated } = useSelector((state) => state.auth);
   // making total amount to last two decimal numbers
   const totalAmount = `$${cartRedux.totalAmount.toFixed(2)}`;
-  const numberOfCartItems = cartRedux.items.reduce((curNumber, item) => {
-    return curNumber + item.quantity;
-  }, 0);
+  const numberOfCartItems = cartRedux.cartItems.length;
+
+  const reducedCartItems = Object.values(
+    cartRedux.cartItems.reduce((acc, { id, name, quantity, price, image }) => {
+      if (!acc[name]) {
+        acc[name] = { id, name, quantity: 1, price, image };
+      } else {
+        acc[name].quantity += 1;
+      }
+      return acc;
+    }, {})
+  );
 
   //checking cart is empty or not
-  const hasItems = cartRedux.items.length > 0;
+  const hasItems = cartRedux.cartItems.length > 0;
   // function for removing item which get id as argument and redirect to cotext action
   const cartItemRemoveHandler = (id) => {
     dispatch(removeOneToCart(id));
@@ -36,10 +46,7 @@ const Cart = (props) => {
   };
   // function for adding Item which get item as argument and redirect to addItem context action and only increase 1 quantity
   const cartItemAddHandler = (item) => {
-    dispatch({
-      type: "ADD_TO_CART",
-      payload: { ...item, quantity: 1 },
-    });
+    dispatch(addToCart(item));
   };
   // function for reset Item which set state to defaultstate
   const resetItemsHandler = () => {
@@ -58,7 +65,7 @@ const Cart = (props) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ items: cartRedux.items }),
+      body: JSON.stringify({ items: cartRedux.cartItems }),
     })
       .then((response) => {
         return response.json();
@@ -78,7 +85,7 @@ const Cart = (props) => {
   // get items from context and map over them to show in cart and cartItem components
   const cartItems = (
     <ul className={classes["cart-items"]}>
-      {cartRedux.items.map((item) => (
+      {reducedCartItems.map((item) => (
         <CartItem
           key={item.id}
           name={item.name}

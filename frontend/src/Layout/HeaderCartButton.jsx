@@ -10,18 +10,14 @@ const HeaderCartButton = (props) => {
   // getting redux cart data for showing totalcartitem in badge
   const cartRedux = useSelector((state) => state.cart);
   // destructureing items from redux cart
-  const { items, cartIsValid } = cartRedux;
-  // use reduce to get total number of cart items
-  const numberOfCartItems = items.reduce((curNumber, item) => {
-    return curNumber + item.quantity;
-  }, 0);
+  const { cartItems, cartIsValid } = cartRedux;
   // implement conditional css using teneary operator and usestate for animate button
   const btnClasses = `${classes.button} ${
     btnIsHighlighted ? classes.bump : ""
   }`;
   // using use effect for showing animation and also use setTimeout and clear it
   useEffect(() => {
-    if (items.length === 0) {
+    if (cartItems.length === 0) {
       return;
     }
     setBtnIsHighlighted(true);
@@ -33,7 +29,7 @@ const HeaderCartButton = (props) => {
     return () => {
       clearTimeout(timer);
     };
-  }, [items]); //use items as a dependency so whenever items change useEffect will run and button animate
+  }, [cartItems]); //use items as a dependency so whenever items change useEffect will run and button animate
 
   return (
     <Link to="/cart">
@@ -42,7 +38,7 @@ const HeaderCartButton = (props) => {
           <CartIcon />
         </span>
         <span>Cart</span>
-        <span className={classes.badge}>{numberOfCartItems}</span>
+        <span className={classes.badge}>{cartItems.length}</span>
         <br />
         {!cartIsValid && (
           <span className={classes.warning}>Limit can't exceed 20</span>

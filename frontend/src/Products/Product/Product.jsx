@@ -8,28 +8,17 @@ const Product = (props) => {
   const dispatch = useDispatch();
   // getting data from redux store
   const cartRedux = useSelector((state) => state.cart);
-  const numberOfCartItems = cartRedux.items.reduce((curNumber, item) => {
-    return curNumber + item.quantity;
-  }, 0);
+  const numberOfCartItems = cartRedux.cartItems.length;
   // fixed price for two decimal numbers
   const price = `$${props.price.toFixed(2)}`;
   // function for adding item to redux store
-  const productIndex = cartRedux.items.findIndex(
+  const productQty = cartRedux.cartItems.filter(
     (item) => item.id === props.id
-  );
-  const product = cartRedux.items[productIndex];
+  ).length;
+
   // it get item quantity from function props and send data of props product to redux store
   const addToCartHandler = (quantity) => {
-    dispatch({
-      type: "UPDATE_CART_ITEM",
-      payload: {
-        id: props.id,
-        name: props.name,
-        quantity: quantity,
-        price: props.price,
-        image: props.img,
-      },
-    });
+    dispatch(updateItemInCart(props, quantity));
 
     if (!(numberOfCartItems + quantity > 20)) {
       msg(`Add ${quantity} Item to Cart`);
@@ -51,7 +40,7 @@ const Product = (props) => {
       <div>
         <ProductForm
           id={props.id}
-          cartQuantity={cartRedux.items ? product?.quantity : ""}
+          cartQuantity={cartRedux.cartItems ? productQty : ""}
           onAddToCart={addToCartHandler}
         />
       </div>

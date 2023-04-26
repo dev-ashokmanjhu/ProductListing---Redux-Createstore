@@ -1,5 +1,8 @@
-export const addToCart = (payload) => {
-  type: "ADD_TO_CART", payload;
+export const addToCart = (item) => (dispatch) => {
+  dispatch({
+    type: "ADD_TO_CART",
+    payload: { ...item, quantity: 1 },
+  });
 };
 
 export const removeToCart = (payload) => (dispatch) => {
@@ -16,10 +19,16 @@ export const removeOneToCart = (payload) => (dispatch) => {
   });
 };
 
-export const updateItemInCart = (item) => (dispatch) => {
+export const updateItemInCart = (props, quantity) => (dispatch) => {
   dispatch({
     type: "UPDATE_CART_ITEM",
-    payload: { ...item, quantity: 1 },
+    payload: {
+      id: props.id,
+      name: props.name,
+      quantity: quantity,
+      price: props.price,
+      image: props.img,
+    },
   });
 };
 
