@@ -65,7 +65,7 @@ const Cart = (props) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ items: cartRedux.cartItems }),
+      body: JSON.stringify({ items: reducedCartItems }),
     })
       .then((response) => {
         return response.json();
